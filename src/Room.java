@@ -2,22 +2,40 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Room {
- private HashMap<String,Room> Exist;
+ private HashMap<String,Room> Exit;
  private String name;
  private String description;
  private String hiddenDetails;
  private boolean hasLamp;
+ private String things;
+ private boolean hasThings;
  
- Room(String name){
+ public boolean isHasThings() {
+	return hasThings;
+}
+
+public void setHasThings(boolean hasThings) {
+	this.hasThings = hasThings;
+}
+
+public String getThings() {
+	return things;
+}
+
+public void setThings(String things) {
+	this.things = things;
+}
+
+Room(String name){
 	 this.name=name;
  }
 
-public HashMap<String, Room> getExist() {
-	return Exist;
+public HashMap<String, Room> getExit() {
+	return Exit;
 }
 
-public void setExists(HashMap<String, Room> exists) {
-	Exist = exists;
+public void setExists(HashMap<String, Room> exits) {
+	Exit = exits;
 }
 
 public String getName() {
