@@ -7,12 +7,23 @@ public class Room {
 	private String description;
 	private String hiddenDetails;
 	private boolean hasLamp;
+	private double money;
+
+	public double getMoney() {
+		return money;
+	}
+
+	public void setMoney(double money) {
+		this.money = money;
+	}
+
 	private ArrayList<Item> items = new ArrayList<Item>();
 
-	Room(String name, String description, String hiddenDetails) {
+	Room(String name, String description, String hiddenDetails, double money) {
 		this.name = name;
-		this.description=description;
-		this.hiddenDetails=hiddenDetails;
+		this.description = description;
+		this.hiddenDetails = hiddenDetails;
+		this.money = money;
 	}
 
 	public ArrayList<Item> getItems() {
@@ -22,8 +33,8 @@ public class Room {
 	public void setItems(ArrayList<Item> items) {
 		this.items = items;
 	}
-	
-	public void addItem(Item item){
+
+	public void addItem(Item item) {
 		items.add(item);
 	}
 
@@ -70,5 +81,8 @@ public class Room {
 	public void setHasLamp(boolean hasLamp) {
 		this.hasLamp = hasLamp;
 	}
-
+	@Override
+	public String toString() {
+		return name;
+	}
 }
