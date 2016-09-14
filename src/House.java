@@ -15,7 +15,7 @@ public class House {
 	static Room vault = new Room("vault", "You are in the Vault, You see 3 walking Skeltons", "", calcMoney());
 	static Room parlor = new Room("parlor", "You are in Parlor, You see treasure Chest",
 			"There is a portrait of your favorite movie star and tickets to their latest movie", calcMoney());
-	static Room secretRoom = new Room("secretRoom", "You found a Secret Room", "You see a pile of gold", calcMoney());
+	static Room secretRoom = new Room("secretRoom", "You are in Secret Room!", "You see a pile of gold", calcMoney());
 	static Room current;
 	static boolean isSecretRoomFound = false;
 	static HashMap<String, Room> directions;
@@ -71,14 +71,6 @@ public class House {
 		//diningRoom.addItem(new Item("Box", "its an empty box", diningRoom, false));
 		diningRoom.addItem(new Item("Gift Card", "You can take the amazon gift card", diningRoom, true));
 
-		// Create vault
-		directions = new HashMap<String, Room>();
-		directions.put("north", null);
-		directions.put("south", null);
-		directions.put("west", null);
-		directions.put("east", findRoom());// parlor and secretRoom(25%)
-		vault.setExists(directions);
-
 		// create parlor
 		directions = new HashMap<String, Room>();
 		directions.put("north", null);
@@ -112,14 +104,20 @@ public class House {
 			if (hasLamp()) {
 				System.out.println(current.getHiddenDetails());
 			}
-			if(current.getName().equalsIgnoreCase("vault")){
-				directions.put("east", findRoom());
-			}
 			System.out.println("Action words are Go, Use, Quit ");
 			o = getInput();
 			if (o.equalsIgnoreCase("Go")) {
 				System.out.println("Where do you want to go?(East/West/North/South) ");
 				option = getInput();
+				if(current.getName().equalsIgnoreCase("vault")&&option.equalsIgnoreCase("east")){
+					// Create vault
+					directions = new HashMap<String, Room>();
+					directions.put("north", null);
+					directions.put("south", null);
+					directions.put("west", null);
+					directions.put("east", findRoom());// parlor and secretRoom(25%)
+					vault.setExists(directions);
+				}
 				tmp = current.getExit().get(option.toLowerCase());
 				while (tmp == null) {
 					System.out.println("You cannot go that way Please enter another direction");
@@ -195,12 +193,15 @@ public class House {
 
 	public static Room findRoom() {
 		if (!isSecretRoomFound) {
-			System.out.println("find room");
-			if (new Random().nextInt(4) == 3)
+			if (new Random().nextInt(1) == 0){
+				System.out.println("You found a secret room.");
+				isSecretRoomFound = true;
 				return secretRoom;
+			}
+			//System.out.println("not yet");
 			return parlor;
 		}
-		System.out.println("Would you want to go Secret Room or Parlor");
+		System.out.println("Secret Room or Parlor");
 		if (getInput().equalsIgnoreCase("SecretRoom"))
 			return secretRoom;
 		return parlor;
@@ -214,6 +215,7 @@ public class House {
 	public static boolean hasLamp() {
 		if (treasureChest.getItems() != null) {
 			for (Item item : treasureChest.getItems()) {
+				System.out.println("test lamp "+item.getName());
 				if (item.getName().equalsIgnoreCase("Lamp"))
 					return true;
 			}
@@ -222,8 +224,8 @@ public class House {
 	}
 
 	public static void showItems() {
-		if(current.getItems().isEmpty()){
-			System.out.println("Nothing to use/pick here");
+		if(current.getItems().isEmpty()&&current.getMoney()==0){
+			System.out.println("Nothing to use/pick here, type b to go back to menu");
 			return;
 		}
 			
@@ -252,14 +254,16 @@ public class House {
 			return true;
 		}
 		if (current.getItems() != null) {
-			for (Item item : current.getItems()) {
+			Item removeItem = null;
+			for ( Item item : current.getItems()) {
 				if (item.getName().equalsIgnoreCase(thing)){
-					System.out.print("You used/took "+item.getName());
-					current.getItems().remove(item);
+					System.out.println("You used/took "+item.getName());
 					treasureChest.addItem(item);
+					removeItem = item;
+					break;
 				}
 			}
-			System.out.print("]");
+			current.getItems().remove(removeItem);
 			return true;
 		}
 		return false;
